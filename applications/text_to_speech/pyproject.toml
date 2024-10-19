@@ -27,9 +27,13 @@ name = "pytorch-gpu"
 url = "https://download.pytorch.org/whl/cu124"
 priority = "explicit"
 
+
+[tool.poetry.group.dev.dependencies]
+snakeviz = "^2.2.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-speak = "text_to_speech.cli:speak"
+cli = "text_to_speech.cli:main"

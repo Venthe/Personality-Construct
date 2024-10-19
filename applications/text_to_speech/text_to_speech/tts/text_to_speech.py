@@ -25,10 +25,12 @@ class TextToSpeech:
         self.__text_to_speech = self.__init_text_to_speech()
 
     def __init_text_to_speech(self):
+        self.__logger.info(f"Initiating TTS model {self.__language_model}")
         try:
             tts_model = TTS(
                 language=self.__language_model.upper(), device=self.__device
             )
+            self.__logger.info(f"TTS model initiated")
         except AssertionError as e:
             self.__logger.error(
                 f"Language not supported, please use either of: {', '.join(list(LANG_TO_HF_REPO_ID.keys()))}"

@@ -54,10 +54,14 @@ class Config:
                     section_key = stripped_key
                     value = None
 
-                # Split section_key into section and key
-                section, key = section_key.split("-", 1)
-
-                self.override_value(section, key, value)
+                try:
+                    # Split section_key into section and key
+                    section, key = section_key.split("-", 1)
+                    if not (self.config.has_section(section) and self.config.has_option(section, key)):
+                        continue
+                    self.override_value(section, key, value)
+                except ValueError:
+                    continue
 
     def override_value(self, section, key, value):
         # Ensure the section exists in the config
