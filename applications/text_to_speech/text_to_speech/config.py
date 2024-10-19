@@ -2,6 +2,15 @@ from python_config.config import Config
 from python_config.utilities import parse_bool
 from python_utilities.utilities import map_log_level
 
+class OpenVoiceEmbedding:
+    def __init__(self, data):
+        self.data = data
+    
+    def speaker_model(self):
+        return self.data.get("speaker_model")
+    
+    def embedding_model(self):
+        return self.data.get("embedding_model")
 
 class OpenVoice:
     def __init__(self, data):
@@ -13,9 +22,6 @@ class OpenVoice:
     def converter_path(self):
         return self.data.get("converter_path")
     
-    def speaker_model(self):
-        return self.data.get("speaker_model")
-    
     def embedding_path(self):
         return self.data.get("embedding_path")
     
@@ -24,9 +30,6 @@ class OpenVoice:
     
     def speaker_key(self):
         return self.data.get("speaker_key")
-    
-    def embedding_model(self):
-        return self.data.get("embedding_model")
     
 
 class Default():
@@ -43,4 +46,5 @@ class TextToSpeechConfig(Config):
     def __init__(self):
         super().__init__()
         self.openvoice = OpenVoice(self.config["openvoice"])
+        self.embedding = OpenVoiceEmbedding(self.config["openvoice-embedding"])
         self.default = Default(self.config["default"])

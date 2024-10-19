@@ -17,7 +17,9 @@ class Trainer:
         name="se",
         clean=True,
     ):
-        self.__logger.info(f"Generating embedding to {target_directory} from {reference_file}")
+        self.__logger.info(
+            f"Generating embedding to {target_directory} from {reference_file}"
+        )
         target_se, audio_name = se_extractor.get_se(
             audio_path=reference_file,
             vc_model=self.__tone_converter,

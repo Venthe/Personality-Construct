@@ -22,12 +22,16 @@ def prediction(config, use_gpu=True):
 
 def prediction_with_embedding(
     config,
+    speaker_model,
+    embedding_model,
     converter_path=__default_converter_path,
     use_gpu=True,
 ):
     return EmbeddingPredictor(
         device=__select_device(use_gpu),
         config=config,
+        speaker_model=speaker_model,
+        embedding_model=embedding_model,
         create_tone_converter_callback=lambda: create_tone_converter(
             device=__select_device(use_gpu), converter_path=converter_path
         ),

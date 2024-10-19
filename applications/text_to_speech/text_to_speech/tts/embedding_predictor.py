@@ -1,6 +1,4 @@
-import os
 import torch
-import logging
 import soundfile
 import librosa
 from .base_predictor import BasePredictor, TTSKwargs
@@ -10,31 +8,32 @@ class EmbeddingPredictor(BasePredictor):
     def __init__(
         self,
         create_tone_converter_callback,
+        speaker_model,
+        embedding_model,
         config,
         device="cpu",
     ):
         super().__init__(config=config, device=device)
         self.__device = device
-        self.__config = config
         self.__tone_converter = create_tone_converter_callback()
         self.__tone_converter_sampling_rate = (
             self.__tone_converter.hps.data.sampling_rate
         )
-        self.__tone_convert = self.__init_tone_convert()
+        self.__tone_convert = self.__init_tone_convert(speaker_model, embedding_model)
 
-    def __init_tone_convert(self):
+    def __init_tone_convert(self, speaker_model, embedding_model):
         speaker_model = torch.load(
-            self.__config.speaker_model(), map_location=torch.device(self.__device)
+            speaker_model, map_location=torch.device(self.__device)
         )
-        embedding_checkpoint = torch.load(
-            self.__config.embedding_model(), map_location=torch.device(self.__device)
+        embedding_model = torch.load(
+            embedding_model, map_location=torch.device(self.__device)
         )
 
         def tone_convert(audio, tau=0.2):
             return self.__tone_converter.convert(
                 audio_src_path=audio,
                 src_se=speaker_model,
-                tgt_se=embedding_checkpoint,
+                tgt_se=embedding_model,
                 tau=tau,
             )
 
