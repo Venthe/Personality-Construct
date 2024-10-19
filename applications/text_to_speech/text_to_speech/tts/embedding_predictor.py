@@ -3,7 +3,7 @@ import torch
 import logging
 import soundfile
 import librosa
-from .base_predictor import BasePredictor
+from .base_predictor import BasePredictor, TTSKwargs
 
 
 class EmbeddingPredictor(BasePredictor):
@@ -59,8 +59,8 @@ class EmbeddingPredictor(BasePredictor):
 
         return self._BasePredictor__to_soundfile(resampled_audio, target_sr)
 
-    def convert(self, text, speed=1.0, tau=0.2):
-        result, sampling_rate = self._BasePredictor__tts(text, speed)
+    def convert(self, text, tau=0.3, **kwargs: TTSKwargs):
+        result, sampling_rate = self._BasePredictor__tts(text, **kwargs)
         result, sampling_rate = self.__apply_embedding(result, sampling_rate, tau)
         sound_file, _ = soundfile.read(result)
         return sound_file, sampling_rate
