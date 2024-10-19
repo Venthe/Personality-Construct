@@ -43,8 +43,8 @@ class BasePredictor:
             return (
                 tts_model.tts_to_file(
                     text,
-                    speed=kwargs.get("speed", 1.0),
                     speaker_id=speaker_id,
+                    speed=kwargs.get("speed", 1.0),
                     sdp_ratio=kwargs.get("sdp_ratio", 0.2),
                     noise_scale=kwargs.get("noise_scale", 0.6),
                     noise_scale_w=kwargs.get("noise_scale_w", 0.8),

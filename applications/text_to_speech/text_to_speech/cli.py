@@ -1,46 +1,40 @@
-from .tts.api import prediction, training, prediction_with_embedding
+from .tts.wrapped_api import (
+    embedding_predict,
+    prediction_with_embedding,
+    prediction,
+    base_predict,
+    training,
+    train,
+)
 from python_utilities.logger import setup_logging
-from .config import TextToSpeechConfig
+from . import config
 import sounddevice
+
+default_config = config.TextToSpeechConfig().default
 
 
 def speak():
-    setup_logging(TextToSpeechConfig().default.log_level())
+    setup_logging(default_config.log_level())
 
-    openvoice_config = TextToSpeechConfig().openvoice
-    openvoice_embedding_config = TextToSpeechConfig().embedding
+    trainer = training()
+    train(
+        trainer,
+        reference_file="../../resources/training_data/tracer.mp3",
+        target_directory="../../resources/models/openvoice/embeddings/",
+        name="tracer",
+    )
 
-    if False:
-        trainer = training(
-            use_gpu=False,  # openvoice_config.use_gpu(),
-            converter_path=openvoice_config.converter_path(),
-        )
-        trainer.train(
-            reference_file="../../resources/training_data/tracer.mp3",
-            target_directory="../../resources/models/openvoice/embeddings/",
-            name="tracer",
-            use_vad=True,
-        )
+    predictor = prediction_with_embedding()
+    wav, sampling_rate = embedding_predict(
+        predictor, "Cheese is here. What do you want to say, love?"
+    )
+    sounddevice.play(wav, sampling_rate)
+    sounddevice.wait()
 
-    a = 1
-    if a == 1:
-        predictor = prediction_with_embedding(
-            use_gpu=openvoice_config.use_gpu(),
-            converter_path=openvoice_config.converter_path(),
-            speaker_model=openvoice_embedding_config.speaker_model(),
-            embedding_model=openvoice_embedding_config.embedding_model(),
-            language_model=openvoice_config.language_model(),
-            speaker_key=openvoice_config.speaker_key(),
-        )
-    elif a == 2:
-        predictor = prediction(
-            use_gpu=openvoice_config.use_gpu(),
-            language_model=openvoice_config.language_model(),
-            speaker_key=openvoice_config.speaker_key(),
-        )
+    predictor = prediction()
 
-    wav, sampling_rate = predictor.convert(
-        "Cheese is here. What do you want to say, love?"
+    wav, sampling_rate = base_predict(
+        predictor, "Cheese is here. What do you want to say, love?"
     )
     sounddevice.play(wav, sampling_rate)
     sounddevice.wait()
