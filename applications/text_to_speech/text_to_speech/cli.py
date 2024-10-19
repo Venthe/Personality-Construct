@@ -3,7 +3,7 @@ from .tts.wrapped_api import (
     embedder as _embedder,
     text_to_speech as _text_to_speech,
     text_to_speech_generate,
-    train,
+    train as _train,
     training,
 )
 from python_utilities.logger import setup_logging
@@ -17,18 +17,18 @@ import time
 default_config = config.TextToSpeechConfig().default
 
 
-# poetry run cli train "../../resources/training_data/tracer.mp3" "../../resources/models/openvoice/embeddings/" "tracer"
+# poetry run cli train "../../resources/training_data/tracer.mp3" "../../resources/models/openvoice/embeddings/" "tracer2"
 def train(reference_file, target_directory, name):
     logging.getLogger(__name__).info(
         f"Training with reference: {reference_file}, target directory: {target_directory}, name: {name}"
     )
 
     trainer = training()
-    train(
+    _train(
         trainer,
-        reference_file=reference_file,  # "../../resources/training_data/tracer.mp3",
-        target_directory=target_directory,  # "../../resources/models/openvoice/embeddings/",
-        name=name,  # "tracer",
+        reference_file=reference_file,
+        target_directory=target_directory,
+        name=name,
     )
 
 

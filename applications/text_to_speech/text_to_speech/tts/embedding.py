@@ -52,7 +52,7 @@ class Trainer:
             shutil.move(existing_item_path, target_item_path)
 
         shutil.rmtree(generated_directory, ignore_errors=True)
-        self.__logger.info(f"Embeddigng generated to {target_directory}")
+        self.__logger.info(f"Embedding generated to {target_directory}")
 
 
 class Embedder:
@@ -63,6 +63,7 @@ class Embedder:
         embedding_model,
         device="cpu",
     ):
+        self.__logger = logging.getLogger(__name__)
         self.__device = device
         self.__tone_converter = create_tone_converter_callback()
         self.__tone_converter_sampling_rate = (
@@ -71,6 +72,9 @@ class Embedder:
         self.__tone_convert = self.__init_tone_convert(speaker_model, embedding_model)
 
     def __init_tone_convert(self, speaker_model, embedding_model):
+        self.__logger.info(
+            f"Creating a tone convert for {speaker_model}, {embedding_model}"
+        )
         speaker_model = torch.load(
             speaker_model, map_location=torch.device(self.__device)
         )
@@ -86,6 +90,7 @@ class Embedder:
                 tau=tau,
             )
 
+        self.__logger.info(f"Tone converter created")
         return tone_convert
 
     def embedding(self, tau=0.2):
