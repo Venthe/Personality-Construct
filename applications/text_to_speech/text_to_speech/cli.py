@@ -26,15 +26,17 @@ def speak():
     if a == 1:
         predictor = prediction_with_embedding(
             use_gpu=openvoice_config.use_gpu(),
-            config=openvoice_config,
             converter_path=openvoice_config.converter_path(),
             speaker_model=openvoice_embedding_config.speaker_model(),
             embedding_model=openvoice_embedding_config.embedding_model(),
+            language_model=openvoice_config.language_model(),
+            speaker_key=openvoice_config.speaker_key(),
         )
     elif a == 2:
         predictor = prediction(
             use_gpu=openvoice_config.use_gpu(),
-            config=openvoice_config,
+            language_model=openvoice_config.language_model(),
+            speaker_key=openvoice_config.speaker_key(),
         )
 
     wav, sampling_rate = predictor.convert(

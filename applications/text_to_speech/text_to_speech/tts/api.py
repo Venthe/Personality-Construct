@@ -16,25 +16,25 @@ def training(converter_path=__default_converter_path, use_gpu=True):
     )
 
 
-def prediction(config, use_gpu=True):
-    return BasePredictor(device=__select_device(use_gpu), config=config)
+def prediction(use_gpu=True, **kwargs):
+    return BasePredictor(device=__select_device(use_gpu), **kwargs)
 
 
 def prediction_with_embedding(
-    config,
-    speaker_model,
     embedding_model,
+    speaker_model = "model/base_speakers/ses/en-default.pth",
     converter_path=__default_converter_path,
     use_gpu=True,
+    **kwargs
 ):
     return EmbeddingPredictor(
         device=__select_device(use_gpu),
-        config=config,
         speaker_model=speaker_model,
         embedding_model=embedding_model,
         create_tone_converter_callback=lambda: create_tone_converter(
             device=__select_device(use_gpu), converter_path=converter_path
         ),
+        **kwargs
     )
 
 

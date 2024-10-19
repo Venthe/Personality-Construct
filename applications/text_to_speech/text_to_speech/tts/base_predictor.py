@@ -17,20 +17,17 @@ class TTSKwargs(TypedDict, total=False):
 
 
 class BasePredictor:
-    def __init__(
-        self,
-        config,
-        device="cpu",
-    ):
+    def __init__(self, device="cpu", **kwargs):
         self.__logger = logging.getLogger(__name__)
         self.__device = device
-        self.__config = config
+        self.__language_model = kwargs.get("language_model", "EN_NEWEST")
+        self.__speaker_key = kwargs.get("speaker_key", "EN-Newest")
         self.__text_to_speech = self.__init_text_to_speech()
 
     def __init_text_to_speech(self):
         try:
             tts_model = TTS(
-                language=self.__config.language_model().upper(), device=self.__device
+                language=self.__language_model.upper(), device=self.__device
             )
         except AssertionError as e:
             self.__logger.error(
@@ -40,9 +37,7 @@ class BasePredictor:
 
         speaker_ids = tts_model.hps.data.spk2id
         self.__logger.debug(f"Available speakers: {speaker_ids}")
-        speaker_id = self.__get_value_from_suffix(
-            speaker_ids, self.__config.speaker_key()
-        )
+        speaker_id = self.__get_value_from_suffix(speaker_ids, self.__speaker_key)
 
         def text_to_speech(text, **kwargs):
             return (

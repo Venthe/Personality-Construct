@@ -10,10 +10,10 @@ class EmbeddingPredictor(BasePredictor):
         create_tone_converter_callback,
         speaker_model,
         embedding_model,
-        config,
         device="cpu",
+        **kwargs
     ):
-        super().__init__(config=config, device=device)
+        super().__init__(device=device, **kwargs)
         self.__device = device
         self.__tone_converter = create_tone_converter_callback()
         self.__tone_converter_sampling_rate = (
