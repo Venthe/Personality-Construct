@@ -1,8 +1,8 @@
 from .tts.wrapped_api import (
-    embedding_predict,
-    prediction_with_embedding,
-    prediction,
-    base_predict,
+    prepare_embedding,
+    embedder as _embedder,
+    text_to_speech as _text_to_speech,
+    text_to_speech_generate,
     training,
     train,
 )
@@ -16,25 +16,28 @@ default_config = config.TextToSpeechConfig().default
 def speak():
     setup_logging(default_config.log_level())
 
-    trainer = training()
-    train(
-        trainer,
-        reference_file="../../resources/training_data/tracer.mp3",
-        target_directory="../../resources/models/openvoice/embeddings/",
-        name="tracer",
-    )
+    # trainer = training()
+    # train(
+    #     trainer,
+    #     reference_file="../../resources/training_data/tracer.mp3",
+    #     target_directory="../../resources/models/openvoice/embeddings/",
+    #     name="tracer",
+    # )
+    # del trainer
 
-    predictor = prediction_with_embedding()
-    wav, sampling_rate = embedding_predict(
-        predictor, "Cheese is here. What do you want to say, love?"
+    text_to_speech = _text_to_speech()
+
+    wav, sampling_rate = text_to_speech_generate(
+        text_to_speech, "Cheese is here. What do you want to say, love???"
     )
     sounddevice.play(wav, sampling_rate)
     sounddevice.wait()
 
-    predictor = prediction()
-
-    wav, sampling_rate = base_predict(
-        predictor, "Cheese is here. What do you want to say, love?"
+    embedder = _embedder()
+    wav, sampling_rate = text_to_speech_generate(
+        text_to_speech,
+        "Cheese is here. What do you want to say, love???",
+        prepare_embedding(embedder=embedder),
     )
     sounddevice.play(wav, sampling_rate)
     sounddevice.wait()

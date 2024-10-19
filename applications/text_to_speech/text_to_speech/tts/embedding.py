@@ -1,3 +1,5 @@
+from .utilities import resample_audio, to_soundfile
+import torch
 import os
 from openvoice import se_extractor
 import shutil
@@ -51,3 +53,48 @@ class Trainer:
 
         shutil.rmtree(generated_directory, ignore_errors=True)
         self.__logger.info(f"Embeddigng generated to {target_directory}")
+
+
+class Embedder:
+    def __init__(
+        self,
+        create_tone_converter_callback,
+        speaker_model,
+        embedding_model,
+        device="cpu",
+    ):
+        self.__device = device
+        self.__tone_converter = create_tone_converter_callback()
+        self.__tone_converter_sampling_rate = (
+            self.__tone_converter.hps.data.sampling_rate
+        )
+        self.__tone_convert = self.__init_tone_convert(speaker_model, embedding_model)
+
+    def __init_tone_convert(self, speaker_model, embedding_model):
+        speaker_model = torch.load(
+            speaker_model, map_location=torch.device(self.__device)
+        )
+        embedding_model = torch.load(
+            embedding_model, map_location=torch.device(self.__device)
+        )
+
+        def tone_convert(audio, tau=0.2):
+            return self.__tone_converter.convert(
+                audio_src_path=audio,
+                src_se=speaker_model,
+                tgt_se=embedding_model,
+                tau=tau,
+            )
+
+        return tone_convert
+
+    def embedding(self, tau=0.2):
+        def apply(result, sampling_rate):
+            result, _ = resample_audio(result, self.__tone_converter_sampling_rate)
+            tc = self.__tone_convert(result, tau=tau)
+            result, sampling_rate = to_soundfile(
+                tc, self.__tone_converter_sampling_rate
+            )
+            return result, sampling_rate
+
+        return apply

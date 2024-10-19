@@ -1,9 +1,9 @@
 import logging
 from melo.api import TTS
 import soundfile
-import io
 from melo.download_utils import LANG_TO_HF_REPO_ID
 from typing import TypedDict, Optional
+from .utilities import to_soundfile
 
 
 class TTSKwargs(TypedDict, total=False):
@@ -16,7 +16,7 @@ class TTSKwargs(TypedDict, total=False):
     quiet: bool
 
 
-class BasePredictor:
+class TextToSpeech:
     def __init__(self, device="cpu", **kwargs):
         self.__logger = logging.getLogger(__name__)
         self.__device = device
@@ -66,21 +66,14 @@ class BasePredictor:
             f"No matching key suffix found for '{text}', {', '.join(list(data.keys()))}"
         )
 
-    def __to_soundfile(self, audio_data, sampling_rate=44100):
-        audio_buffer = io.BytesIO()
-        soundfile.write(audio_buffer, audio_data, sampling_rate, format="WAV")
-        audio_buffer.seek(0)
-
-        return audio_buffer, sampling_rate
-
     def __tts(self, text, **kwargs):
         audio_data, sampling_rate = self.__text_to_speech(text, **kwargs)
-        result, sampling_rate = self.__to_soundfile(
-            audio_data, sampling_rate=sampling_rate
-        )
+        result, sampling_rate = to_soundfile(audio_data, sampling_rate=sampling_rate)
         return result, sampling_rate
 
-    def convert(self, text, **kwargs: TTSKwargs):
+    def generate(self, text, embedding=None, **kwargs: TTSKwargs):
         result, sampling_rate = self.__tts(text, **kwargs)
+        if embedding is not None:
+            result, sampling_rate = embedding(result, sampling_rate)
         sound_file, _ = soundfile.read(result)
         return sound_file, sampling_rate
