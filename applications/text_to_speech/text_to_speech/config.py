@@ -13,23 +13,20 @@ class OpenVoice:
     def converter_path(self):
         return self.data.get("converter_path")
     
-    def speaker_path(self):
-        return self.data.get("speaker_path")
-    
     def speaker_model(self):
         return self.data.get("speaker_model")
     
     def embedding_path(self):
         return self.data.get("embedding_path")
     
-    def embedding_model(self):
-        return self.data.get("embedding_model")
-    
     def language_model(self):
         return self.data.get("language_model")
     
     def speaker_key(self):
         return self.data.get("speaker_key")
+    
+    def embedding_model(self):
+        return self.data.get("embedding_model")
     
 
 class Default():
