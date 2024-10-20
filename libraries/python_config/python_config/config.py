@@ -10,7 +10,7 @@ class Config:
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(Config, cls).__new__(cls)
-            cls._instance.__configuration_path = None
+            cls._instance.__configuration_path = "configuration.ini"
             cls._instance.config = configparser.ConfigParser()
         return cls._instance
 

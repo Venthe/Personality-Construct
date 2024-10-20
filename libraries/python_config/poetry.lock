@@ -100,6 +100,22 @@ tomli = {version = ">=1", markers = "python_version < \"3.11\""}
 dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
+name = "python-utilities"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = "^3.10"
+files = []
+develop = true
+
+[package.dependencies]
+configparser = "^7.1.0"
+
+[package.source]
+type = "directory"
+url = "../python_utilities"
+
+[[package]]
 name = "tomli"
 version = "2.0.2"
 description = "A lil' TOML parser"
@@ -113,4 +129,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2f74520905e1ab31312ddfcd835959ef3a41c5d9fe9d231afdafe3341480643c"
+content-hash = "5b0e68b9ab129c54533fe39af01b07fb39b2d0b6086269cc09ccf94996bf9781"

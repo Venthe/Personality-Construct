@@ -94,7 +94,7 @@ class Embedder:
         return tone_convert
 
     def embedding(self, buffer, tau=0.2):
-        result, _ = resample_audio(result, self.__tone_converter_sampling_rate)
-        tc = self.__tone_convert(result, tau=buffer)
+        result, _ = resample_audio(buffer, self.__tone_converter_sampling_rate)
+        tc = self.__tone_convert(result, tau=tau)
         result, sampling_rate = to_soundfile(tc, self.__tone_converter_sampling_rate)
         return result, sampling_rate

@@ -17,7 +17,7 @@ import time
 default_config = config.TextToSpeechConfig().default
 
 
-# poetry run cli train "../../resources/training_data/tracer.mp3" "../../resources/models/openvoice/embeddings/" "tracer2"
+# poetry run cli train "../../resources/training_data/tracer.mp3" "../../resources/models/openvoice/embeddings/" "tracer3"
 def train(reference_file, target_directory, name):
     logging.getLogger(__name__).info(
         f"Training with reference: {reference_file}, target directory: {target_directory}, name: {name}"
@@ -32,7 +32,7 @@ def train(reference_file, target_directory, name):
     )
 
 
-# poetry run cli generate --use-embedding --play "A big brown for has jumped over a lazy dog."
+# poetry run cli generate --use-embedding --play "A big brown fox has jumped over a lazy dog." --config-override=section=openvoice-embedding,option=embedding_model,value=../../resources/models/openvoice/embeddings/dva/checkpoint.pth
 def generate(text, use_embedding, play, output_file):
     logging.getLogger(__name__).info(
         f"Generated content for: {text} with embedding={use_embedding} and play={play}"
@@ -53,7 +53,7 @@ def generate(text, use_embedding, play, output_file):
         embedding = prepare_embedding(embedder=embedder)
         sound_file_buffer, sampling_rate = embedding(sound_file_buffer, sampling_rate)
 
-    sound_file = soundfile.read(sound_file_buffer)
+    sound_file, _ = soundfile.read(sound_file_buffer)
 
     if play:
         sounddevice.play(sound_file, sampling_rate)
