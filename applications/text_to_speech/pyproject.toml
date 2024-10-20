@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "speech-recognition"
+name = "text_to_speech"
 version = "0.1.0"
 description = ""
 authors = ["Jacek Lipiec <jacek.lipiec.bc@gmail.com>"]
@@ -37,3 +37,4 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 cli = "text_to_speech.cli:main"
+server = "text_to_speech.server:main"

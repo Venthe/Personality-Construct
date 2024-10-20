@@ -12,7 +12,6 @@ import sounddevice
 import argparse
 import logging
 import soundfile
-import time
 
 default_config = config.TextToSpeechConfig().default
 

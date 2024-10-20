@@ -35,19 +35,19 @@ class OpenVoice:
 
     def speaker_key(self):
         return self.data.get("speaker_key")
-    
+
     def speed(self):
         return float(self.data.get("speed"))
-    
+
     def sdp_ratio(self):
         return float(self.data.get("sdp_ratio"))
-    
+
     def noise_scale(self):
         return float(self.data.get("noise_scale"))
-    
+
     def noise_scale_w(self):
         return float(self.data.get("noise_scale_w"))
-    
+
     def quiet(self):
         return parse_bool(self.data.get("quiet"))
 
@@ -62,6 +62,21 @@ class Default:
     def log_path(self):
         return self.data.get("log_path") if self.data.get("log_path") else None
 
+
+class Server:
+    def __init__(self, data):
+        self.data = data
+
+    def port(self):
+        return int(self.data.get("port"))
+
+    def host(self):
+        return self.data.get("host")
+
+    def debug(self):
+        return parse_bool(self.data.get("debug"))
+
+
 class OpenVoiceEmbeddingTraining:
     def __init__(self, data):
         self.data = data
@@ -75,5 +90,8 @@ class TextToSpeechConfig(Config):
         super().__init__()
         self.openvoice = OpenVoice(self.config["openvoice"])
         self.embedding = OpenVoiceEmbedding(self.config["openvoice-embedding"])
-        self.training = OpenVoiceEmbeddingTraining(self.config["openvoice-embedding-training"])
+        self.training = OpenVoiceEmbeddingTraining(
+            self.config["openvoice-embedding-training"]
+        )
+        self.server = Server(self.config["server"])
         self.default = Default(self.config["default"])

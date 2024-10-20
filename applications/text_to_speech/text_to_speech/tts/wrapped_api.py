@@ -31,18 +31,19 @@ def embedder():
     )
 
 
+def prepare_embedding(embedder):
+    def embed(buffer, sampling_rate):
+        return embedder.embedding(buffer=buffer, tau=openvoice_embedding_config.tau())
+
+    return embed
+
+
 def text_to_speech():
     return api.text_to_speech(
         use_gpu=openvoice_config.use_gpu(),
         language_model=openvoice_config.language_model(),
         speaker_key=openvoice_config.speaker_key(),
     )
-
-
-def prepare_embedding(embedder):
-    def embed(buffer, sampling_rate):
-        return embedder.embedding(buffer = buffer, tau=openvoice_embedding_config.tau())
-    return embed
 
 
 def text_to_speech_generate(text_to_speech, text):

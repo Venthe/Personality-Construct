@@ -1,16 +1,13 @@
 from python_config.config import Config, extract_ini_parameter
 
 
-# def test_some_function():
-#     config = SingleConfig(initial_data={"section": [{"key": "value"}]})
-#     assert config.config["section"].get("key") == "value"
-
-
 class TestConfig(Config):
     def __new__(cls, *args, **kwargs):
         instance = super(TestConfig, cls).__new__(cls)
         # Handle TestConfig-specific initialization before parent's __init__
-        instance._testconfig_init(kwargs.pop("initial_data", None), kwargs.pop("arguments", None))
+        instance._testconfig_init(
+            kwargs.pop("initial_data", None), kwargs.pop("arguments", None)
+        )
         return instance
 
     def _testconfig_init(self, initial_data=None, arguments=None):
@@ -37,10 +34,3 @@ def test_some_function2():
     )
     print(config.config)
     assert config.config["section"].get("key") == "value2"
-
-
-# def test_extract_ini():
-#     section, option, value = extract_ini_parameter("section=section,option=key,value=value2")
-#     assert section=="section"
-#     assert option=="key"
-#     assert value=="value2"

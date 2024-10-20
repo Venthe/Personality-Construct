@@ -21,9 +21,9 @@ def text_to_speech(use_gpu=True, **kwargs):
 
 def embedder(
     embedding_model,
-    speaker_model = "model/base_speakers/ses/en-default.pth",
+    speaker_model="model/base_speakers/ses/en-default.pth",
     converter_path=__default_converter_path,
-    use_gpu=True
+    use_gpu=True,
 ):
     return Embedder(
         device=__select_device(use_gpu),
@@ -31,7 +31,7 @@ def embedder(
         embedding_model=embedding_model,
         create_tone_converter_callback=lambda: create_tone_converter(
             device=__select_device(use_gpu), converter_path=converter_path
-        )
+        ),
     )
 
 
