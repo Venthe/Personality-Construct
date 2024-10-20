@@ -43,24 +43,24 @@ def generate(text, use_embedding, play, output_file):
 
     text_to_speech = _text_to_speech()
 
-    if use_embedding:
-        embedder = _embedder()
-    output, sampling_rate = text_to_speech_generate(
+    sound_file_buffer, sampling_rate = text_to_speech_generate(
         text_to_speech,
         text,
-        embedding=(
-            prepare_embedding(embedder=embedder)
-            if use_embedding and embedder is not None
-            else None
-        ),
     )
 
+    if use_embedding:
+        embedder = _embedder()
+        embedding = prepare_embedding(embedder=embedder)
+        sound_file_buffer, sampling_rate = embedding(sound_file_buffer, sampling_rate)
+
+    sound_file = soundfile.read(sound_file_buffer)
+
     if play:
-        sounddevice.play(output, sampling_rate)
+        sounddevice.play(sound_file, sampling_rate)
         sounddevice.wait()
 
     if output_file:
-        soundfile.write(output_file, output, sampling_rate)
+        soundfile.write(output_file, sound_file, sampling_rate)
         print(f"Output written to {output_file}")
 
 

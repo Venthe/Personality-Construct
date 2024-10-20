@@ -39,14 +39,15 @@ def text_to_speech():
     )
 
 
-def prepare_embedding(embedder):
-    return embedder.embedding(tau=openvoice_embedding_config.tau())
+def prepare_embedding(embedder, buffer, sampling_rate):
+    def embed(buffer):
+        embedder.embedding(buffer = buffer, tau=openvoice_embedding_config.tau())
+    return embed
 
 
-def text_to_speech_generate(text_to_speech, text, embedding=None):
+def text_to_speech(text_to_speech, text):
     return text_to_speech.generate(
         text,
-        embedding=embedding,
         speed=openvoice_config.speed(),
         sdp_ratio=openvoice_config.sdp_ratio(),
         noise_scale=openvoice_config.noise_scale(),

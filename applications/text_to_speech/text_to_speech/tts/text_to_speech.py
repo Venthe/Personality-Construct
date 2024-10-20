@@ -68,14 +68,7 @@ class TextToSpeech:
             f"No matching key suffix found for '{text}', {', '.join(list(data.keys()))}"
         )
 
-    def __tts(self, text, **kwargs):
+    def generate(self, text, **kwargs: TTSKwargs):
         audio_data, sampling_rate = self.__text_to_speech(text, **kwargs)
         result, sampling_rate = to_soundfile(audio_data, sampling_rate=sampling_rate)
         return result, sampling_rate
-
-    def generate(self, text, embedding=None, **kwargs: TTSKwargs):
-        result, sampling_rate = self.__tts(text, **kwargs)
-        if embedding is not None:
-            result, sampling_rate = embedding(result, sampling_rate)
-        sound_file, _ = soundfile.read(result)
-        return sound_file, sampling_rate

@@ -93,13 +93,8 @@ class Embedder:
         self.__logger.info(f"Tone converter created")
         return tone_convert
 
-    def embedding(self, tau=0.2):
-        def apply(result, sampling_rate):
-            result, _ = resample_audio(result, self.__tone_converter_sampling_rate)
-            tc = self.__tone_convert(result, tau=tau)
-            result, sampling_rate = to_soundfile(
-                tc, self.__tone_converter_sampling_rate
-            )
-            return result, sampling_rate
-
-        return apply
+    def embedding(self, buffer, tau=0.2):
+        result, _ = resample_audio(result, self.__tone_converter_sampling_rate)
+        tc = self.__tone_convert(result, tau=buffer)
+        result, sampling_rate = to_soundfile(tc, self.__tone_converter_sampling_rate)
+        return result, sampling_rate

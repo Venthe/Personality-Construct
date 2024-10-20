@@ -4,30 +4,25 @@ import sys
 import re
 
 
-class SingleConfig:
-    def __init__(
-        self, configuration_path="configuration.ini", initial_data={}, arguments=None
-    ):
-        self.__configuration_path = configuration_path
-        self.load_config_from_file()
-        self.load_initial_data(initial_data)
-        self.override_file()
-        # self.override_environment_variables()
-        self.override_arguments(arguments)
+class Config:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(Config, cls).__new__(cls)
+            cls._instance.__configuration_path = None
+            cls._instance.config = configparser.ConfigParser()
+        return cls._instance
+
+    def __init__(self, *args, **kwargs):
+        self._instance.load_config_from_file()
+        self._instance.override_file()
+        # cls._instance.override_environment_variables()
+        self._instance.override_arguments()
 
     def load_config_from_file(self):
-        config = configparser.ConfigParser()
-        config.read(os.path.join(os.getcwd(), self.__configuration_path))
-
-        self.config = config
-
-    def load_initial_data(self, initial_data):
-        for section, key_value_pairs in initial_data.items():
-            for kv in key_value_pairs:
-                # Extract the key and value from the dictionary
-                for key, value in kv.items():
-                    # Override the value for the given section and key
-                    self.override_value(section, key, value)
+        if self.__configuration_path:
+            self.config.read(os.path.join(os.getcwd(), self.__configuration_path))
 
     def override_file(self):
         override = self.config.get("default", "override_path", fallback="override.ini")
@@ -35,18 +30,23 @@ class SingleConfig:
             self.config.read(override)
 
     def override_environment_variables(self):
-        prefix = "CONFIG_"
+        prefix = "CONFIG_OVERRIDE"
         for key, value in os.environ.items():
-            if key.startswith(prefix):
-                # Remove prefix to get section and key
-                stripped_key = key[len(prefix) :]  # Remove prefix
-                # Split the remaining key into section and key
-                section, key = stripped_key.split("_", 1)
+            if not key.startswith(prefix):
+                continue
+            arr = [item.strip() for item in value.split(";")]
+            for el in arr:
+                section, option, value = extract_ini_parameter(el)
 
-                self.override_value(section, key, value)
+                if not (
+                    self.config.has_section(section)
+                    and self.config.has_option(section, option)
+                ):
+                    continue
+                self.override_value(section, option, value)
 
-    def override_arguments(self, args):
-        args = sys.argv[1:] if args is None else args
+    def override_arguments(self, arguments=None):
+        args = sys.argv[1:] if arguments is None else arguments
 
         # Process each argument
         for index, arg in enumerate(args):
@@ -87,17 +87,6 @@ class SingleConfig:
 
         # Set the value in the config
         self.config.set(section, key, str(value) if value is not None else None)
-
-
-class Config:
-    _instance = None
-
-    def __new__(
-        cls, configuration_path="configuration.ini", initial_data={}, arguments=None
-    ):
-        if cls._instance is None:
-            cls._instance = SingleConfig(configuration_path, initial_data, arguments)
-        return cls._instance
 
 
 def extract_ini_parameter(value: str):
