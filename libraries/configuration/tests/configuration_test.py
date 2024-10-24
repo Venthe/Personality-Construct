@@ -1,4 +1,4 @@
-from python_config.config import Config, extract_ini_parameter
+from _configuration.config import Config
 
 
 class TestConfig(Config):

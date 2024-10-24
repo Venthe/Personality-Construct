@@ -1,5 +1,5 @@
-from python_config.config import Config
-from python_utilities.utilities import map_log_level
+from _config.config import Config
+from _utilities.utilities import map_log_level
 
 
 class LLM:

@@ -1,18 +1,18 @@
 [tool.poetry]
-name = "_utilities"
+name = "internal-sound-input"
 version = "0.1.0"
 description = ""
 authors = ["Jacek Lipiec <jacek.lipiec.bc@gmail.com>"]
 
 
 [[tool.poetry.packages]]
-include = "_utilities"
+include = "sound_input"
 
 
 [tool.poetry.dependencies]
-python = ">=3.9"
-torch = { version = ">=2.3.0", optional = true }
-colorama = "^0.4.6"
+python = "^3.10"
+numpy = ">=1.22.0"
+sounddevice = "^0.5.1"
 
 
 [build-system]

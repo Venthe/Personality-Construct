@@ -2,7 +2,6 @@ import socket
 import subprocess
 import etcd3
 import time
-import os
 import logging
 
 
@@ -85,10 +84,3 @@ class EtcdServiceRegistrar:
             else:
                 logging.warning(f"Service {service_id} deleted or not available.")
                 callback(None)
-
-
-if __name__ == "__main__":
-    registrar = EtcdServiceRegistrar()
-    registrar.run(
-        "your_application_command_here", "service_id", "http://your_health_endpoint"
-    )

@@ -12,9 +12,8 @@ class ConsoleFormatter(logging.Formatter):
         logging.WARNING: colorama.Fore.YELLOW,  # Yellow
         logging.ERROR: colorama.Fore.RED,  # Red
         logging.CRITICAL: colorama.Fore.RED + colorama.Style.BRIGHT,  # Bold Red
-        "RESET": colorama.Style.RESET_ALL,
     }
-    _reset = self._COLORS["RESET"]
+    _reset = colorama.Style.RESET_ALL
 
     def format(self, record):
         log_color = self.color_for(record.levelno)

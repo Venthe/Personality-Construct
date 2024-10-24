@@ -13,8 +13,8 @@ torchaudio = { version = "2.4.1", source = "pytorch-gpu" }
 numpy = "1.22.0"
 Flask = "^3.0.3"
 ffmpeg-python = "^0.2.0"
-python-config = { path = "../../libraries/python_config", develop = true }
-python-utilities = { path = "../../libraries/python_utilities", develop = true }
+internal-config = { path = "../../libraries/config", develop = true }
+internal-utilities = { path = "../../libraries/utilities", develop = true }
 melotts = { git = "https://github.com/myshell-ai/MeloTTS.git", rev = "5b538481e24e0d578955be32a95d88fcbde26dc8" }
 myshell-openvoice = { git = "https://github.com/myshell-ai/OpenVoice.git", rev = "f3cf835540572ade1460c8952f39d53e4f7952df" }
 sounddevice = "^0.5.1" # Remove when using output library 

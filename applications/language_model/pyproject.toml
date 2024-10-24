@@ -7,8 +7,8 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "~3.10"
-python-config = { path = "../../libraries/python_config", develop = true }
-python-utilities = { path = "../../libraries/python_utilities", develop = true }
+internal-configuration = { path = "../../libraries/configuration", develop = true }
+internal-utilities = { path = "../../libraries/utilities", develop = true }
 torch = {version = "2.3.1+cu121", source = "pytorch-gpu"}
 optimum = {git = "https://github.com/huggingface/optimum", rev = "v1.23.2"}
 transformers = {git = "https://github.com/huggingface/transformers", rev = "v4.45.2"}

@@ -175,4 +175,4 @@ numpy = ["NumPy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2c32ab201df3662948cb2b01832e69e8b46e77b01e831e3ccb270fd45ed1fb91"
+content-hash = "829bb75c48684bf89334516d91d4f0a1cc3253d05d2f25e9627dc66312e03c17"

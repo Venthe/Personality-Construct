@@ -2,8 +2,7 @@ import os
 
 # import mistral_common.tokens
 from language_model.language_model.language_model import LanguageModel
-from python_utilities.logger import setup_logging
-from huggingface_hub import snapshot_download, hf_hub_download
+from _utilities.logger import setup_logging
 
 from language_model.config import LanguageModelConfig
 from logging import getLogger
@@ -17,19 +16,6 @@ from language_model.language_model.mistral_chat_template import (
 
 def main():
     setup_logging(LanguageModelConfig().default.log_level())
-    # snapshot_download(
-    #     repo_id=LanguageModelConfig().llm.model_name(),
-    #     local_dir=os.path.join(
-    #         LanguageModelConfig().llm.model_path(),
-    #         LanguageModelConfig().llm.model_name(),
-    #     ),
-    # )
-    #
-    # hf_hub_download(repo_id=LanguageModelConfig().llm.model_name(), filename="Mistral-Nemo-Instruct-2407.Q4_K_S.gguf", local_dir=os.path.join(
-    #         LanguageModelConfig().llm.model_path(),
-    #         LanguageModelConfig().llm.model_name(),
-    #     ))
-    logger = getLogger(__name__)
     llm = LanguageModel(
         f"{os.path.join(LanguageModelConfig().llm.model_path(), LanguageModelConfig().llm.model_name())}",
         device_map="cuda:0",

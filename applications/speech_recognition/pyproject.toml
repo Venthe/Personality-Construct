@@ -12,9 +12,9 @@ torch = { version = "2.4.1", source = "pytorch-gpu" }
 torchaudio = { version = "2.4.1", source = "pytorch-gpu" }
 numpy = "^2.0.2"
 Flask = "^3.0.3"
-python-config = { path = "../../libraries/python_config", develop = true }
-python-utilities = { path = "../../libraries/python_utilities", develop = true }
-python-sound-input = { path = "../../libraries/python_sound_input", develop = true }
+internal-config = { path = "../../libraries/config", develop = true }
+internal-utilities = { path = "../../libraries/utilities", develop = true }
+internal-sound-input = { path = "../../libraries/sound_input", develop = true }
 
 [[tool.poetry.packages]]
 include = "speech_recognition"
