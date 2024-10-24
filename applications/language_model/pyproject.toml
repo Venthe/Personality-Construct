@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "language-model"
+version = "0.1.0"
+description = ""
+authors = ["Jacek Lipiec <jacek.lipiec.bc@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "~3.10"
+python-config = { path = "../../libraries/python_config", develop = true }
+python-utilities = { path = "../../libraries/python_utilities", develop = true }
+torch = {version = "2.3.1+cu121", source = "pytorch-gpu"}
+optimum = {git = "https://github.com/huggingface/optimum", rev = "v1.23.2"}
+transformers = {git = "https://github.com/huggingface/transformers", rev = "v4.45.2"}
+numpy = "1.26.4"
+autoawq = "^0.2.6"
+
+[[tool.poetry.packages]]
+include = "language_model"
+
+[[tool.poetry.source]]
+name = "pytorch-gpu"
+url = "https://download.pytorch.org/whl/cu121"
+priority = "explicit"
+
+[tool.poetry.scripts]
+cli = "language_model.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

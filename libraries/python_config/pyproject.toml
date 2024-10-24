@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "python-config"
+version = "0.1.0"
+description = ""
+authors = ["Jacek Lipiec <jacek.lipiec.bc@gmail.com>"]
+
+
+[[tool.poetry.packages]]
+include = "python_config"
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+configparser = "^7.1.0"
+python-utilities = { path = "../python_utilities", develop = true }
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+test = "pytest:main"
