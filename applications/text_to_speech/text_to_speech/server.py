@@ -1,10 +1,10 @@
 from datetime import datetime
 import time
 from flask import Flask, request, send_file, g
-from text_to_speech.converter import audio_buffer_to_mp3
-from text_to_speech.tts.embedding import Embedder
-from text_to_speech.tts.text_to_speech import TextToSpeech
-from .tts.wrapped_api import (
+from text_to_speech.utilities.converter import audio_buffer_to_mp3
+from text_to_speech.tone_converter.tone_converter_trainer import ToneConverter
+from text_to_speech.text_to_speech.text_to_speech import TextToSpeech
+from .config_wrapped_api import (
     prepare_embedding,
     embedder as _embedder,
     text_to_speech as _text_to_speech,
@@ -15,8 +15,8 @@ from . import config
 
 app = Flask(__name__)
 text_to_speech: TextToSpeech = _text_to_speech()
-embedder: Embedder = _embedder()
-server_config = config.TextToSpeechConfig().server
+embedder: ToneConverter = _embedder()
+server_config = config.TextToSpeechConfiguration().server
 
 
 def convert(text):

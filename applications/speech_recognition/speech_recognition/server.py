@@ -3,7 +3,7 @@ import numpy
 import base64
 from .config import SpeechRecognitionConfig
 from .speech_recognition import SpeechRecognition
-from python_utilities.logger import setup_logging
+from python_utilities.logging import setup_logging
 import logging
 from datetime import datetime, timezone
 import threading

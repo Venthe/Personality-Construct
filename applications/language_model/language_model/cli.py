@@ -2,7 +2,7 @@ import os
 
 # import mistral_common.tokens
 from language_model.language_model.language_model import LanguageModel
-from _utilities.logger import setup_logging
+from _utilities.logging import setup_logging
 
 from language_model.config import LanguageModelConfig
 from logging import getLogger

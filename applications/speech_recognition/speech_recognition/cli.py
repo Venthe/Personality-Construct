@@ -1,5 +1,5 @@
 from python_sound_input.listener import MicrophoneListener
-from python_utilities.logger import setup_logging
+from python_utilities.logging import setup_logging
 import threading
 from .speech_recognition import SpeechRecognition
 from .config import SpeechRecognitionConfig

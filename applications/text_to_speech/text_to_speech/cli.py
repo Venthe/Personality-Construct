@@ -1,56 +1,42 @@
-from .tts.wrapped_api import (
-    prepare_embedding,
-    embedder as _embedder,
-    text_to_speech as _text_to_speech,
-    text_to_speech_generate,
-    train as _train,
-    training,
+from text_to_speech.tone_converter.default_api import (
+    create_tone_converter_trainer,
+    train_tone_converter,
+    create_tone_converter,
+    tone_converter_process,
 )
-from python_utilities.logger import setup_logging
+from text_to_speech.text_to_speech.default_api import (
+    create_text_to_speech,
+    text_to_speech_generate,
+)
+from _utilities.logging import setup_logging
 from . import config
 import sounddevice
 import argparse
 import logging
 import soundfile
 
-default_config = config.TextToSpeechConfig().default
+default_config = config.TextToSpeechConfiguration().default
 
 
-# poetry run cli train "../../resources/training_data/tracer.mp3" "../../resources/models/openvoice/embeddings/" "tracer3"
-def train(reference_file, target_directory, name):
+# poetry run cli generate --convert-tone --play "A big brown fox has jumped over a lazy dog." --config-override=section=openvoice-embedding,option=embedding_model,value=../../resources/models/openvoice/embeddings/dva/checkpoint.pth
+def generate(text, convert_tone, play, output_file):
     logging.getLogger(__name__).info(
-        f"Training with reference: {reference_file}, target directory: {target_directory}, name: {name}"
-    )
-
-    trainer = training()
-    _train(
-        trainer,
-        reference_file=reference_file,
-        target_directory=target_directory,
-        name=name,
-    )
-
-
-# poetry run cli generate --use-embedding --play "A big brown fox has jumped over a lazy dog." --config-override=section=openvoice-embedding,option=embedding_model,value=../../resources/models/openvoice/embeddings/dva/checkpoint.pth
-def generate(text, use_embedding, play, output_file):
-    logging.getLogger(__name__).info(
-        f"Generated content for: {text} with embedding={use_embedding} and play={play}"
+        f"Generated content for: {text} with convert_tone={convert_tone} and play={play}"
     )
 
     if not (play or output_file):
-        raise Exception("Error: Either --play or --output_file must be provided.")
+        raise Exception("Error: Either --play and/or --output_file must be provided.")
 
-    text_to_speech = _text_to_speech()
+    text_to_speech = create_text_to_speech()
 
     sound_file_buffer, sampling_rate = text_to_speech_generate(
         text_to_speech,
         text,
     )
 
-    if use_embedding:
-        embedder = _embedder()
-        embedding = prepare_embedding(embedder=embedder)
-        sound_file_buffer, sampling_rate = embedding(sound_file_buffer, sampling_rate)
+    if convert_tone:
+        tone_converter = create_tone_converter()
+        sound_file_buffer, sampling_rate = tone_converter_process(tone_converter=tone_converter, buffer=sound_file_buffer)
 
     sound_file, _ = soundfile.read(sound_file_buffer)
 
@@ -61,6 +47,21 @@ def generate(text, use_embedding, play, output_file):
     if output_file:
         soundfile.write(output_file, sound_file, sampling_rate)
         print(f"Output written to {output_file}")
+
+
+# poetry run cli train "../../resources/training_data/tracer.mp3" "../../resources/embeddings/OpenVoiceV2/" "tracer"
+def train(reference_file, target_directory, name):
+    logging.getLogger(__name__).info(
+        f"Training with reference: {reference_file}, target directory: {target_directory}, name: {name}"
+    )
+
+    trainer = create_tone_converter_trainer()
+    train_tone_converter(
+        trainer,
+        reference_file=reference_file,
+        target_directory=target_directory,
+        name=name,
+    )
 
 
 def main():
@@ -79,7 +80,7 @@ def main():
     # Generate command
     generate_parser = subparsers.add_parser('generate', help='Generate content')
     generate_parser.add_argument('text', type=str, nargs='?', help='Text to generate content for', default=None)
-    generate_parser.add_argument('-e', '--use-embedding', action='store_true', default=False, help='Use embedding in generation')
+    generate_parser.add_argument('-c', '--convert-tone', action='store_true', default=False, help='Convert tone after generation')
     generate_parser.add_argument('-p', '--play', action='store_true', default=True, help='Play generated content')
     generate_parser.add_argument('-o', '--output-file', type=str, help='Path to save the output file', default=None)
     # fmt: on
@@ -94,7 +95,7 @@ def main():
         if not text:
             print("Error: Text is required for generation.")
             return
-        generate(args.text, args.use_embedding, args.play, args.output_file)
+        generate(args.text, args.convert_tone, args.play, args.output_file)
     else:
         parser.print_help()
 
