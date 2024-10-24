@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "internal-utilities"
+version = "0.1.0"
+description = ""
+authors = ["Jacek Lipiec <jacek.lipiec.bc@gmail.com>"]
+
+
+[[tool.poetry.packages]]
+include = "_utilities"
+
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+torch = { version = ">=2.3.0", optional = true }
+colorama = "^0.4.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

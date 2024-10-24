@@ -1,43 +1,16 @@
 services:
-  speech_recognition:
-    build:
-      context: services/speech_recognition
-    volumes:
-      - ./resources/models/whisper:/model
+  postgres:
+    image: pgvector/pgvector:pg17
+    shm_size: 128mb
     ports:
-      - 5000:5000
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-  text_to_speech:
-    build:
-      context: services/text_to_speech
+      - 5432:5432
     volumes:
-      - ./resources/models/openvoice:/model
+      - /users/venthe/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  adminer:
+    image: adminer
+    restart: always
     ports:
-      - 5001:5000
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-  # language_model:
-  #   build:
-  #     context: services/language_model
-  #   volumes:
-  #     - ./resources/models/Mistral-7B-Instruct-v0.3-GPTQ-4bit:/model
-  #   ports:
-  #     - 5002:5000
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - driver: nvidia
-  #             count: 1
-  #             capabilities: [gpu]
+      - 8080:8080

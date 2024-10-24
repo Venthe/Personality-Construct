@@ -1,81 +1,80 @@
-# Structure
+## Directory structure
 
-## Architecture
+├──applications           # High-level applications
+├───build_tools           # Scripts, Docker, CI/CD, etc.
+│   └───bazel             # Bazel-specific configurations
+├───docs                  # "documentation" shortened to follow convention
+├───libraries             # Shared libraries and utilities
+│   ├───audio_processing  # Example shared library name
+│   ├───ml_utils          # Example shared library name
+│   └───common            # Common utilities shared across libraries
+├───resources
+│   ├───models            # Pre-trained models or checkpoints
+│   └───training_data     # Datasets for training
 
-### Senses (Input)
 
-Recognize speech, images, and other sensor inputs.
+## TODO
 
-* Speech recognition
-* Image/face recognition
+### Speech recognition
 
-### Knowledge (Core)
+* Should I use Faster whisper?
+* How to achieve Real time speech recognition?
+* SOunds recognition?
+* Owner of the voice?
+* Emotions?
 
-Manage AI logic, time, personality, memory, and context.
+### TTS
 
-* Access via configuration profile
-  * Separate memory
-  * context
-  * personality layers
-    * Behavioral changes
-* Memory and context
-  * Short term
-  * long term
-  * Personality
-* ML Model
-* External data
-  * Time
+* How to achieve real time test to speech?
+* How to add subtitles while speaking?
 
-### Communication (Output)
+### LLM
 
-Respond via speech, control visuals, interact with games or environments.
+* How to fine tune LLM?
+* How to apply Reinforcement Learning with Human Feedback? making the model better at mimicking responses close to the individual’s traits and preferences.
+* Retrieval-Augmented Generation? Modular RAG? to allow the model to access external knowledge bases or documents, simulating the ability to "recall" specific facts about the person.
+* Memory?
+* Emotions?
+* Embedding? To encode personality-specific responses?
+* Function calls/action framework
+* Prompt engineering to simulate personality traits?
+* Continual learning?
+* Environment simulation to add context?
 
-* Text-to-speech
-* VTuber avatar manipulation
-* Game integration
+### Other
 
-## Unsolved issues
+* Visual recognition?
+* 
 
-### Imitating Thinking About an Issue (e.g., "The answer is a... No, rather b")
+## Neuro capabilities
 
-To make the model emulate a process of self-reflection, where it changes its initial answer (e.g., "The answer is A... No, rather B"):
+u18:
+* Autonomous discord DM's, call invitations
+* TTS speed manipulation
 
-1. Prompting Style:
-   * Use longer prompts that encourage self-debate. For example:
-   * "Consider the pros and cons of A. Think carefully before concluding."
-   * LLama3’s structure can support this by prompting it to "think out loud."
-2. Chain-of-Thought Prompting:
-   * LLama3 is good with step-by-step reasoning. You can guide the model to reconsider its conclusions by asking it to reflect: "Now that you've thought about A, is there something you're missing? Reevaluate."
+Future:
+* Toggle control
+* Call kicking
+* Calling other constructs
+* singing
+* tweeting
+* Soundboard
+* Voice changer
 
-### Storing Facts / Committing Them to Memory
+## Installation
 
-To have the model commit facts to memory and decide what to store:
+pip install toml-cli
+pip install pyenv-win --target $env:USERPROFILE\\.pyenv
+[System.Environment]::SetEnvironmentVariable('PYENV',$env:USERPROFILE + "\.pyenv\pyenv-win\","User")
+[System.Environment]::SetEnvironmentVariable('PYENV_ROOT',$env:USERPROFILE + "\.pyenv\pyenv-win\","User")
+[System.Environment]::SetEnvironmentVariable('PYENV_HOME',$env:USERPROFILE + "\.pyenv\pyenv-win\","User")
+[System.Environment]::SetEnvironmentVariable('path', $env:USERPROFILE + "\.pyenv\pyenv-win\bin;" + $env:USERPROFILE + "\.pyenv\pyenv-win\shims;" + [System.Environment]::GetEnvironmentVariable('path', "User"),"User")
 
-* Knowledge Core as Authority:
-  Use the LLM to process information and suggest what should be stored as fact, but have a dedicated   memory service decide what is committed. The LLM should output candidates for facts: "I just learned   that X. Should I remember this?"
-  Then, based on criteria or rules in the knowledge module, you decide what is persisted.
-* Automatic Memory Commitment:
-  After each conversation or task, feed the LLM-generated conclusions into the memory database (e.g., Redis/SQLite). Example workflow:
-  LLM identifies important facts → Sends to a “fact manager” API → The fact manager validates and persists in memory.
-* Feedback and Decision:
-  Let the model suggest multiple potential interpretations of the input and store only the final "decision": "It seems like we decided X is correct, let me save that."
-  Keep logs in the memory service to track committed decisions for future context.
+Per project:
 
-### Summary Approach for LLama3:
-
-1. Chain-of-Thought prompting: Encourage the LLM to reason through problems.
-2. Memory Commitment: Have the LLM suggest facts but use an external service to validate and store them.
-3. Personality Context: Adjust the prompts based on the personality and make decisions accordingly.
-
-## Plan
-
-### Development phases
-
-1. Basic MVP with simple input/output
-   1. Speech recognition -> Text processing -> TTS response.
-   2. Simple visual manipulations (e.g., mouth movement).
-2. Add memory/personality
-   1. Track previous conversations, context-aware responses.
-   2. Improve facial expressions and gestures.
-3. Integrate with external systems (games, streams).
-   1. Game/streaming overlay, dynamic interactions.
+pyenv install 3.9.8
+pyenv local 3.9.8  # Activate Python 3.9 for the current project
+poetry install
+pyenv install --skip-existing
+pyenv local
+poetry install
